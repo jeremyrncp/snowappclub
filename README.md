@@ -19,7 +19,7 @@ Modify .env to your environment.
 on your computer to run these commands:
 
 ```bash
-git clone https://github.com/jeremyrncp/demo.git my_project
+git clone https://github.com/jeremyrncp/snowappclub.git my_project
 cd my_project/
 composer install
 bin/console doctrine:migrations:migrate
