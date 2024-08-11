@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Documentation API{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>Documentation API</h1>
+
+    <div class="alert alert-warning">
+        Toutes nos API sont libres d'utilisation et ne nécessitent aucune authentification
+    </div>
+    <ul>
+        <li>Liste des localisations <code>/api/localisations GET</code></li>
+        <li>Liste des données neige <code>/api/snowdatas GET</code></li>
+        <li>Liste des données neige par localisation et par hiver <code>/api/bylocalisationandwinter/ID localisation/YEAR WINTER GET (exemple /api/bylocalisationandwinter/1/2024)</code></li>
+    </ul>
+</div>
+{% endblock %}

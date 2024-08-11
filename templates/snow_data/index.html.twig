@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SnowData index{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Données neige</h1>
+    <a href="{{ path('app_snow_data_new') }}" class="btn btn-primary">Nouveau</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Neige fraïche</th>
+                <th>Neige totale</th>
+                <th>Flocons observés</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for snow_datum in snow_datas %}
+            <tr>
+                <td>{{ snow_datum.id }}</td>
+                <td>{{ snow_datum.date ? snow_datum.date|date('d/m/Y') : '' }}</td>
+                <td>{{ snow_datum.snowFresh }}</td>
+                <td>{{ snow_datum.snowTotal }}</td>
+                <td>{{ snow_datum.snow ? 'Oui' : 'non' }}</td>
+                <td>
+                    <a href="{{ path('app_snow_data_show', {'id': snow_datum.id}) }}">visualiser</a>
+                    <a href="{{ path('app_snow_data_edit', {'id': snow_datum.id}) }}">editer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">pas d'enregistrement</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

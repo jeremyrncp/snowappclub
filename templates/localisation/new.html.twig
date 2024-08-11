@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Localisation{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Nouvelle localisation</h1>
+    <div style="text-align: right">
+        <a href="{{ path('app_localisation_index') }}">retourner à la liste</a>
+    </div>
+
+    {{ include('localisation/_form.html.twig') }}
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SnowData{% endblock %}
+
+{% block body %}
+    <h1>SnowData</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ snow_datum.id }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ snow_datum.date ? snow_datum.date|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>SnowFresh</th>
+                <td>{{ snow_datum.snowFresh }}</td>
+            </tr>
+            <tr>
+                <th>SnowTotal</th>
+                <td>{{ snow_datum.snowTotal }}</td>
+            </tr>
+            <tr>
+                <th>Snow</th>
+                <td>{{ snow_datum.snow ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_snow_data_index') }}">back to list</a>
+
+    <a href="{{ path('app_snow_data_edit', {'id': snow_datum.id}) }}">edit</a>
+
+    {{ include('snow_data/_delete_form.html.twig') }}
+{% endblock %}

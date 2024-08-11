@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle donnée neige{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Nouvelle donnée neige</h1>
+
+    <div style="text-align: right">
+        <a href="{{ path('app_snow_data_index') }}">retourner à la liste</a>
+    </div>
+
+
+    {{ include('snow_data/_form.html.twig') }}
+</div>
+{% endblock %}

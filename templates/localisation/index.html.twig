@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Localisation index{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Mes localisations</h1>
+     <a href="{{ path('app_localisation_new') }}" class="btn btn-primary">Nouveau</a>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Altitude</th>
+                <th>Ville</th>
+                <th>Pays</th>
+                <th>actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for localisation in localisations %}
+                <tr>
+                    <td>{{ localisation.id }}</td>
+                    <td>{{ localisation.name }}</td>
+                    <td>{{ localisation.elevation }}</td>
+                    <td>{{ localisation.city }}</td>
+                    <td>{{ localisation.country }}</td>
+                    <td>
+                        <a href="{{ path('app_localisation_show', {'id': localisation.id}) }}">visualiser</a>
+                        <a href="{{ path('app_localisation_edit', {'id': localisation.id}) }}">éditer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">pas d'enregistrement</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

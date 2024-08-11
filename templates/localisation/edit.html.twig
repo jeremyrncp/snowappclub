@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Localisation{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Editer localisation</h1>
+
+    {{ include('localisation/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+    <a href="{{ path('app_localisation_index') }}" class="btn btn-primary">retourner à la liste</a>
+
+    {{ include('localisation/_delete_form.html.twig') }}
+</div>
+{% endblock %}

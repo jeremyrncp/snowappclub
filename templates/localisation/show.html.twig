@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Localisation{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Localisation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ localisation.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ localisation.name }}</td>
+            </tr>
+            <tr>
+                <th>Altitude</th>
+                <td>{{ localisation.elevation }} m</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ localisation.city }}</td>
+            </tr>
+            <tr>
+                <th>Pays</th>
+                <td>{{ localisation.country }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="{{ path('app_localisation_index') }}" class="btn btn-primary">retourner à la liste</a><br />
+    <a href="{{ path('app_localisation_edit', {'id': localisation.id}) }}" class="btn btn-primary">Editer</a><br />
+
+    {{ include('localisation/_delete_form.html.twig') }}
+</div>
+{% endblock %}
