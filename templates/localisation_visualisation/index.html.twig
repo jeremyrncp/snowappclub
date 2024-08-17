@@ -5,6 +5,7 @@
 {% block body %}
 <h1>Poste nivologique {{ localisation }}, hiver {{ winter }}</h1>
 <p>HIVER :  {% for listWinter in listWinters %}<a href="{{ path("app_localisation_visualisation", {'id': localisation.id }) }}?winter={{ listWinter }}">{{ listWinter }}</a> {% endfor %}</p>
+<p><a href="{{ path("app_api_snow_data_csv_by_localisation_and_winter", {'id': localisation.id, 'winter': winter }) }}" class="btn btn-primary" target="_blank">Données brutes CSV</a> <a href="{{ path("app_api_snow_data_by_localisation_and_winter", {'id': localisation.id, 'winter': winter }) }}" class="btn btn-primary" target="_blank">Données brutes JSON</a></p>
 <section class="example-wrapper">
     <h4>Statistiques</h4>
     <ul>

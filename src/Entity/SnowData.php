@@ -21,19 +21,19 @@ class SnowData
     private ?Localisation $localisation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['snowdata:public'])]
+    #[Groups(['snowdata:public', 'snowdata:apicsv'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['snowdata:public'])]
+    #[Groups(['snowdata:public', 'snowdata:apicsv'])]
     private ?int $snowFresh = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['snowdata:public'])]
+    #[Groups(['snowdata:public', 'snowdata:apicsv'])]
     private ?int $snowTotal = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['snowdata:public'])]
+    #[Groups(['snowdata:public', 'snowdata:apicsv'])]
     private ?bool $snow = null;
 
     public function getId(): ?int
@@ -99,5 +99,11 @@ class SnowData
         $this->snow = $snow;
 
         return $this;
+    }
+
+    #[Groups(['snowdata:public'])]
+    public function getNameLocalisation(): string
+    {
+        return (string) $this->getLocalisation();
     }
 }

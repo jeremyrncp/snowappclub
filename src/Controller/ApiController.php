@@ -6,6 +6,7 @@ use App\Repository\LocalisationRepository;
 use App\Repository\SnowDataRepository;
 use App\Service\SnowDataService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Context\Normalizer\ObjectNormalizerContextBuilder;
@@ -24,6 +25,29 @@ class ApiController extends AbstractController
     public function getSnowDatasbyLocalisationAndWinter(Localisation $localisation, int $winter): JsonResponse
     {
         return $this->success($this->snowDataService->findDataByWinterAndLocalisation($winter, $localisation), ['snowdata:public']);
+    }
+
+    #[Route('/bylocalisationandwinter/{id}/{winter}/csv', name: 'app_api_snow_data_csv_by_localisation_and_winter', methods: ['GET'])]
+    public function getSnowDatasCSVbyLocalisationAndWinter(Localisation $localisation, int $winter): BinaryFileResponse
+    {
+        $data = $this->success($this->snowDataService->findDataByWinterAndLocalisation($winter, $localisation), ['snowdata:apicsv']);
+        $jsonDecoded = json_decode($data->getContent(), true);
+
+        $fileName = urlencode(strtolower($localisation->getName()));
+        $this->convertJsonToCSV($jsonDecoded, __DIR__. '/../../public/csv/'. $fileName . '.csv');
+
+        return new BinaryFileResponse(__DIR__. '/../../public/csv/'. $fileName . '.csv', 200);
+    }
+
+    private function convertJsonToCSV($jsonDecoded, $csvFile)
+    {
+        $fp = fopen($csvFile, 'w');
+        fputcsv($fp, array_keys($jsonDecoded[0]));
+        for ($i = 0; $i < count($jsonDecoded); $i ++) {
+            fputcsv($fp, array_values($jsonDecoded[$i]));
+        }
+        fclose($fp);
+        return;
     }
 
     #[Route('/snowdatas', name: 'app_api_snow_data', methods: ['GET'])]
