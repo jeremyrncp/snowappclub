@@ -36,6 +36,7 @@ security:
     access_control:
          - { path: ^/saisie, roles: ROLE_USER }
          - { path: ^/snow/data, roles: ROLE_USER }
+         - { path: ^/localisation/visualisation, roles: PUBLIC_ACCESS }
          - { path: ^/localisation, roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }
 
