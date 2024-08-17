@@ -17,7 +17,7 @@ class LocalisationType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom',
+                'label' => 'Lieu de la mesure (rue, lieu dit ...)',
                 'required' => true
             ])
             ->add('elevation', IntegerType::class, [
