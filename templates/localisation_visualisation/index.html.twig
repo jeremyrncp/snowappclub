@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Poste nivologique {{ localisation }}, hiver {{ winter }}{% endblock %}
+
+{% block body %}
+<h1>Poste nivologique {{ localisation }}, hiver {{ winter }}</h1>
+<p>HIVER :  {% for listWinter in listWinters %}<a href="{{ path("app_localisation_visualisation", {'id': localisation.id }) }}?winter={{ listWinter }}">{{ listWinter }}</a> {% endfor %}</p>
+<section class="example-wrapper">
+    <h4>Statistiques</h4>
+    <ul>
+        <lI>Jours avec chutes de neige : <b>{{ snowStatistics.sumSnow }}</b></lI>
+        <li>Cumul de neige fraîche : <b>{{ snowStatistics.sumSnowFresh }}cm</b></li>
+        <li>Cumul moyen de neige fraîche : <b>{{ snowStatistics.avgSnowFresh }}cm</b></li>
+        <li>Hauteur moyenne de neige au sol : <b>{{ snowStatistics.avgSnowTotal }}cm</b></li>
+        <li>Hauteur maximale de neige au sol : <b>{{ snowStatistics.maxSnowTotal }}cm</b></li>
+    </ul>
+</section>
+</div>
+<section>
+    <h4>Graphique neige fraîche</h4>
+    <div id="chartSnowFresh"></div>
+    <br /><br />
+    <h4>Graphique hauteur neige</h4>
+    <div id="chartSnowTotal"></div>
+    <br /><br />
+    <h4>Graphique neige observée</h4>
+    <div id="chartSnow"></div>
+    <br />
+
+    <script type="text/javascript">
+    const { AgCharts } = agCharts;
+
+    // Snow fresh
+    const snowFresh = {
+      container: document.getElementById("chartSnowFresh"), // Container: HTML Element to hold the chart
+      // Data: Data to be displayed in the chart
+      data: [
+          {% for data in datas %}
+          {% if data.snowFresh is null %}
+          {% set snowFresh = 0 %}
+          {% else %}
+          {% set snowFresh = data.snowFresh %}
+          {% endif %}
+        { day: "{{ data.date|date('d/m/Y') }}", snowFresh:  {{ snowFresh }}},
+          {% endfor %}
+      ],
+
+      // Series: Defines which chart type and data to use
+      series: [{ type: "bar", xKey: "day", yKey: "snowFresh" }],
+    };
+
+    // Create Chart
+    AgCharts.create(snowFresh);
+
+    // Snow fresh
+    const snowTotal = {
+      container: document.getElementById("chartSnowTotal"), // Container: HTML Element to hold the chart
+      // Data: Data to be displayed in the chart
+      data: [
+          {% for data in datas %}
+          {% if data.snowTotal is null %}
+          {% set snowTotal = 0 %}
+          {% else %}
+          {% set snowTotal = data.snowTotal %}
+          {% endif %}
+        { day: "{{ data.date|date('d/m/Y') }}", snowTotal:  {{ snowTotal }}},
+          {% endfor %}
+      ],
+
+      // Series: Defines which chart type and data to use
+      series: [{ type: "area", xKey: "day", yKey: "snowTotal" }],
+    };
+
+    // Create Chart
+    AgCharts.create(snowTotal);
+
+    // Snow
+    const snow = {
+      container: document.getElementById("chartSnow"), // Container: HTML Element to hold the chart
+      // Data: Data to be displayed in the chart
+      data: [
+          {% for data in datas %}
+          {% if data.snow is null or data.snow == false %}
+          {% set snow = 0 %}
+          {% else %}
+          {% set snow = 1 %}
+          {% endif %}
+        { day: "{{ data.date|date('d/m/Y') }}", snow:  {{ snow }}},
+          {% endfor %}
+      ],
+
+      // Series: Defines which chart type and data to use
+      series: [{ type: "bar", xKey: "day", yKey: "snow" }],
+    };
+
+    // Create Chart
+    AgCharts.create(snow);
+    </script>
+{% endblock %}

@@ -26,5 +26,13 @@
         <p>Pour la mesure de la neige fraîche, la norme est d'utiliser une planche et de mesure, tous les jours à 8h, la hauteur de neige se trouvant dessus</p>
         <p>Pour la hauteur de neige au sol, privilégier un endroit représentatif du terrain que vous étudiez, à l'abri des effets du vent (accumulation, déflation) et installez y un jalon de 2m gradué tous les 5 ou 10cm</p>
     </div>
+    <div class="alert alert-info">
+        <p><b>Liste des postes nivologiques</b></p>
+        <ul>
+            {% for localisation in localisations %}
+                <li><a href="{{ path("app_localisation_visualisation", {'id': localisation.id }) }}">{{ localisation }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %}

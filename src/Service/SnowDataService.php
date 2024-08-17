@@ -67,4 +67,21 @@ class SnowDataService
 
         return $this->snowDataRepository->findBetweenDatesAndLocalisation($startWinterDate, $endWinterDate, $localisation);
     }
+
+    public function getWinters(): array
+    {
+        $winters = [];
+
+        /** @var SnowData $snowData */
+        foreach ($this->snowDataRepository->findAll() as $snowData) {
+            array_push($winters, (int) $snowData->getDate()->format("Y"));
+        }
+
+        $winters = array_unique(array_values($winters));
+
+        $last = end($winters);
+        array_push($winters, $last + 1);
+
+        return $winters;
+    }
 }

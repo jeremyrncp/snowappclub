@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\VisualisationType;
+use App\Repository\LocalisationRepository;
 use App\Service\SnowDataService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class VisualisationController extends AbstractController
 {
-    public function __construct(private readonly SnowDataService $snowDataService)
+    public function __construct(private readonly SnowDataService $snowDataService, private readonly LocalisationRepository $localisationRepository)
     {
     }
 
@@ -30,7 +31,8 @@ class VisualisationController extends AbstractController
         return $this->render('visualisation/index.html.twig', [
             'form' => $visualisationForm->createView(),
             'datas' => $data,
-            'snowStatistics' => $this->snowDataService->getStatisticsData($data)
+            'snowStatistics' => $this->snowDataService->getStatisticsData($data),
+            'localisations' =>$this->localisationRepository->findAll()
         ]);
     }
 }

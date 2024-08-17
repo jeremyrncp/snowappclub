@@ -99,4 +99,12 @@
         AgCharts.create(snow);
     </script>
 </section>
+<div class="example-wrapper">
+    <h2>Dashboards</h2>
+    <ul>
+        {% for localisation in localisations %}
+            <li><a href="{{ path("app_localisation_visualisation", {'id': localisation.id }) }}">{{ localisation }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}
