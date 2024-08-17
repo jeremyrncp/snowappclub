@@ -145,6 +145,6 @@ class Localisation
 
     public function __toString()
     {
-        return $this->name . " (" . $this->city . ", " . $this->country.")";
+        return $this->name . " (" . $this->city . ", " . $this->country.") " . $this->elevation . "m";
     }
 }
