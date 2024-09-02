@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ station.name }}, {{ station.elevation }}m {% block title %}Ubibot Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <!-- JavaScript Charts Core Library -->
+    <script src="https://cdn.jsdelivr.net/npm/ag-charts-community/dist/umd/ag-charts-community.js"></script>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-size: 14px;
+            font-family: "Verdana Arial", serif;
+            padding: 10px;
+        }
+        header {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .cards {
+            display: flex;
+        }
+
+        .card {
+            margin-right: 15px;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <section>
+            <img src="img/ubibot.webp" style="width:100px;" alt="Logo Hubibot" />
+        </section>
+        <section>
+            <h1>{{ station.name }}, {{ station.elevation }}m</h1><br />
+            <a href="{{ path("app_ubibot_dashboard", {"serial": station.serial}) }}?day=3">3 jours</a>
+            <a href="{{ path("app_ubibot_dashboard", {"serial": station.serial}) }}?day=7">7 jours</a>
+            <a href="{{ path("app_ubibot_dashboard", {"serial": station.serial}) }}?day=15">15 jours</a>
+            <a href="{{ path("app_ubibot_dashboard", {"serial": station.serial}) }}?day=31">31 jours</a>
+        </section>
+    </header>
+    <main>
+        <section class="cards">
+            <div class="card">
+                <div class="card-body">
+                    Température à 2m (°C) : {{ firstData.tOut }}
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    Humidité à 2m (%) : {{ firstData.rhOut }}
+                </div>
+            </div>
+        </section>
+        <section>
+            <h4>Graphique T2M (°C)</h4>
+            <div id="chartTOut"></div>
+            <br /><br />
+            <h4>Graphique HUM (%)</h4>
+            <div id="chartRhOut"></div>
+            <br /><br />
+            <script type="text/javascript">
+                const { AgCharts } = agCharts;
+
+                // Snow fresh
+                const tOut = {
+                  container: document.getElementById("chartTOut"),
+                  data: [
+                      {% for data in datas %}
+                    { day: "{{ data.createdAt|date('H:i d/m/Y') }}", tOut:  {{ data.tout }}},
+                      {% endfor %}
+                  ],
+
+                  // Series: Defines which chart type and data to use
+                  series: [{ type: "area", xKey: "day", yKey: "tOut" }],
+                };
+
+                // Create Chart
+                AgCharts.create(tOut);
+
+                // Snow fresh
+                const rhOut = {
+                  container: document.getElementById("chartRhOut"),
+                  data: [
+                      {% for data in datas %}
+                    { day: "{{ data.createdAt|date('H:i d/m/Y') }}", rhOut:  {{ data.rhout }}},
+                      {% endfor %}
+                  ],
+                  series: [{ type: "bar", xKey: "day", yKey: "rhOut" }],
+                };
+
+                // Create Chart
+                AgCharts.create(rhOut);
+            </script>
+        </section>
+        <section>
+            <table class="table table-responsive table-bordered">
+                <thead>
+                    <th>Date</th>
+                    <th>T2M (°C)</th>
+                    <th>HUM (%)</th>
+                </thead>
+                <tbody>
+                    {% for data in datas %}
+                        <tr>
+                            <td>{{ data.createdAt|date('H:i d/m/Y') }}</td>
+                            <td>{{ data.tout }}</td>
+                            <td>{{ data.rhout }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

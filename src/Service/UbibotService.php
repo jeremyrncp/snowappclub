@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\WeatherData;
+use App\Entity\WeatherStation;
 use App\Repository\WeatherDataRepository;
 use App\Repository\WeatherStationRepository;
 use Doctrine\Common\Collections\Order;
@@ -49,7 +50,34 @@ class UbibotService
         ]);
     }
 
-    /**
+    public function getDataBySerialLast3daysOrderedByDateDESC(string $serial, int $day = 3): array
+    {
+        $date = (new \DateTime("now"))->modify("-" . $day . " days");
+
+        $dataFiltered = [];
+
+        foreach ($this->weatherDataRepository->findBy(['station' => $this->getWeatherStationBySerial($serial)], ['createdAt' => 'DESC']) as $data) {
+            if ($data->getCreatedAt() >= $date) {
+                $dataFiltered[] = $data;
+            }
+        }
+
+        return $dataFiltered;
+    }
+
+    public function getWeatherStationBySerial(string $serial): WeatherStation
+    {
+        $weatherStation = $this->weatherStationRepository->findOneBy(['serial' => $serial]);
+
+        if (is_null($weatherStation)) {
+            throw new NotFoundHttpException(sprintf("Weather station %s was not found", $serial));
+        }
+
+        return $weatherStation;
+    }
+
+
+/**
      * Decode ubibot data and insert in data base
      *
      * @param string $serial
@@ -60,11 +88,7 @@ class UbibotService
      */
     public function decodeAndInsert(string $serial, array $data): WeatherData
     {
-        $weatherStation = $this->weatherStationRepository->findOneBy(['serial' => $serial]);
-
-        if (is_null($weatherStation)) {
-            throw new NotFoundHttpException(sprintf("Weather station %s was not found", $serial));
-        }
+        $weatherStation = $this->getWeatherStationBySerial($serial);
 
         foreach ($data['feeds'] as $feed) {
             $createdAt = new \DateTime($feed['created_at']);
