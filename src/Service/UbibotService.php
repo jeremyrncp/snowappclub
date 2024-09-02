@@ -65,6 +65,21 @@ class UbibotService
         return $dataFiltered;
     }
 
+    public function getDataBySerialLast3daysOrderedByDateASC(string $serial, int $day = 3): array
+    {
+        $date = (new \DateTime("now"))->modify("-" . $day . " days");
+
+        $dataFiltered = [];
+
+        foreach ($this->weatherDataRepository->findBy(['station' => $this->getWeatherStationBySerial($serial)], ['createdAt' => 'ASC']) as $data) {
+            if ($data->getCreatedAt() >= $date) {
+                $dataFiltered[] = $data;
+            }
+        }
+
+        return $dataFiltered;
+    }
+
     public function getWeatherStationBySerial(string $serial): WeatherStation
     {
         $weatherStation = $this->weatherStationRepository->findOneBy(['serial' => $serial]);

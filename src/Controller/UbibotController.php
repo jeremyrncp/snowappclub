@@ -38,11 +38,13 @@ class UbibotController extends AbstractController
     {
         $day = $request->query->getInt("day", 3);
 
-        $data = $this->ubibotService->getDataBySerialLast3daysOrderedByDateDESC($serial, $day);
+        $dataDESC = $this->ubibotService->getDataBySerialLast3daysOrderedByDateDESC($serial, $day);
+        $dataASC = $this->ubibotService->getDataBySerialLast3daysOrderedByDateASC($serial, $day);
 
         return $this->render('ubibot/dashboard.html.twig', [
-            'datas' => $data,
-            'firstData' => current($data),
+            'datasDESC' => $dataDESC,
+            'datasASC' => $dataASC,
+            'firstData' => current($dataDESC),
             'station' => $this->ubibotService->getWeatherStationBySerial($serial)
         ]);
     }
