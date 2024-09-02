@@ -3,15 +3,50 @@
 namespace App\Service;
 
 use App\Entity\WeatherData;
+use App\Repository\WeatherDataRepository;
 use App\Repository\WeatherStationRepository;
+use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Twig\Environment;
 
 class UbibotService
 {
-    public function __construct(private readonly WeatherStationRepository $weatherStationRepository, private readonly EntityManagerInterface $entityManager)
+    public function __construct(
+        private readonly WeatherStationRepository $weatherStationRepository,
+        private readonly WeatherDataRepository $weatherDataRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Environment $twig
+    ) {
+    }
+
+    /**
+     * Get static data
+     *
+     * @param string $serial
+     *
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function getStatICLastDataBySerial(string $serial): string
     {
+        $weatherStation = $this->weatherStationRepository->findOneBy(['serial' => $serial]);
+
+        if (is_null($weatherStation)) {
+            throw new NotFoundHttpException(sprintf("Weather station %s was not found", $serial));
+        }
+
+        $lastWeatherData = $this->weatherDataRepository->findOneBy(['station' => $weatherStation], ['createdAt' => Order::Descending]);
+
+        return $this->twig->render('static/static.txt.twig', [
+            'createdAt' => $lastWeatherData->getCreatedAt(),
+            'tOut' => $lastWeatherData->getTout(),
+            'rhOut' => $lastWeatherData->getRhout(),
+            'station' => $weatherStation
+        ]);
     }
 
     /**

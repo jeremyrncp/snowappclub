@@ -31,4 +31,6 @@ class UbibotController extends AbstractController
 
         return $this->json("success");
     }
+
+
 }

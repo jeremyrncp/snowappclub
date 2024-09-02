@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\UbibotService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,6 +10,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class StaticController extends AbstractController
 {
+    public function __construct(private readonly UbibotService $ubibotService)
+    {
+
+    }
+
     #[Route('/static/lemonastiersurgazeille', name: 'app_static_le_monastier_sur_gazeille')]
     public function index(): Response
     {
@@ -41,5 +47,13 @@ class StaticController extends AbstractController
         file_put_contents(__DIR__ . '/../../public/csv/lemonastier.txt', $str);
 
         return new BinaryFileResponse(__DIR__ . '/../../public/csv/lemonastier.txt');
+    }
+
+    #[Route('/static/ubibot/{serial}', name: 'app_static_ubibot')]
+    public function staticUbibot(string $serial): Response
+    {
+        file_put_contents(__DIR__ . '/../../public/csv/'.$serial.'.txt', $this->ubibotService->getStatICLastDataBySerial($serial));
+
+        return new BinaryFileResponse(__DIR__ . '/../../public/csv/'.$serial.'.txt');
     }
 }
