@@ -39,7 +39,7 @@ class UbibotService
             throw new NotFoundHttpException(sprintf("Weather station %s was not found", $serial));
         }
 
-        $lastWeatherData = $this->weatherDataRepository->findOneBy(['station' => $weatherStation], ['createdAt' => Order::Descending]);
+        $lastWeatherData = $this->weatherDataRepository->findOneBy(['station' => $weatherStation], ['createdAt' => 'DESC']);
 
         return $this->twig->render('static/static.txt.twig', [
             'createdAt' => $lastWeatherData->getCreatedAt(),
