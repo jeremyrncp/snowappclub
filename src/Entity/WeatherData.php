@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\WeatherDataRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: WeatherDataRepository::class)]
 class WeatherData
@@ -15,18 +16,23 @@ class WeatherData
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['weatherdata:public', 'weatherdata:apicsv'])]
     private ?float $tint = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['weatherdata:public', 'weatherdata:apicsv'])]
     private ?float $tout = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['weatherdata:public', 'weatherdata:apicsv'])]
     private ?float $rhint = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['weatherdata:public', 'weatherdata:apicsv'])]
     private ?float $rhout = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['weatherdata:public', 'weatherdata:apicsv'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'weatherData')]

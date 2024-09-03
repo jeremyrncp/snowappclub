@@ -2,14 +2,13 @@
 
 namespace App\Controller;
 use App\Service\UbibotService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/ubibot')]
-class UbibotController extends AbstractController
+class UbibotController extends ApiController
 {
     public function __construct(private readonly UbibotService $ubibotService) {
     }
@@ -47,5 +46,31 @@ class UbibotController extends AbstractController
             'firstData' => current($dataDESC),
             'station' => $this->ubibotService->getWeatherStationBySerial($serial)
         ]);
+    }
+
+    #[Route('/api/{serial}', name: 'app_ubibot_api', methods: ['GET'])]
+    public function getApi(string $serial, Request $request): JsonResponse
+    {
+        $day = $request->query->getInt("day", 3);
+
+        $dataASC = $this->ubibotService->getDataBySerialLast3daysOrderedByDateASC($serial, $day);
+
+        return $this->success($dataASC, ['weatherdata:public']);
+    }
+
+    #[Route('/api/{serial}/csv', name: 'app_ubibot_api_csv', methods: ['GET'])]
+    public function getApiCsv(string $serial, Request $request): BinaryFileResponse
+    {
+        $day = $request->query->getInt("day", 3);
+
+        $dataASC = $this->ubibotService->getDataBySerialLast3daysOrderedByDateASC($serial, $day);
+
+        $data = $this->success($dataASC, ['weatherdata:apicsv']);
+        $jsonDecoded = json_decode($data->getContent(), true);
+
+        $fileName = urlencode(strtolower($serial));
+        $this->convertJsonToCSV($jsonDecoded, __DIR__. '/../../public/csv/'. $fileName . '.csv');
+
+        return new BinaryFileResponse(__DIR__. '/../../public/csv/'. $fileName . '.csv', 200);
     }
 }

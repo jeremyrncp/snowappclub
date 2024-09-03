@@ -58,6 +58,9 @@
             <a href="{{ path("app_ubibot_dashboard", {"serial": station.serial}) }}?day=31">31 jours</a>
 
         </section>
+        <section>
+            API : <a class="btn btn-primary" href="{{ path("app_ubibot_api", {"serial": station.serial}) }}?day=3">JSON</a> <a class="btn btn-primary" href="{{ path("app_ubibot_api_csv", {"serial": station.serial}) }}?day=3">CSV</a>
+        </section>
         <section class="cards">
             <div class="card">
                 <div class="card-body">
